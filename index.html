@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JZ Taste Restaurant</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,opsz,wght@0,9..144,300;0,9..144,500;0,9..144,600;0,9..144,700;1,9..144,500&family=Work+Sans:wght@300;400;500;600&family=IBM+Plex+Mono:wght@400;500&display=swap" rel="stylesheet">
+<link href="https://cdn.jsdelivr.net/npm/@n8n/chat/dist/style.css" rel="stylesheet" />
+<style>
+  :root{
+    --charcoal:#1B1712;
+    --ivory:#F1E9DC;
+    --turmeric:#E8A33D;
+    --chili:#C1442E;
+    --coriander:#5C6B4A;
+    --ash:#3A2E26;
+    --ash-line: rgba(241,233,220,0.14);
+  }
+  *{margin:0;padding:0;box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    background:var(--charcoal);
+    color:var(--ivory);
+    font-family:'Work Sans', sans-serif;
+    font-weight:400;
+    line-height:1.6;
+  }
+  h1,h2,h3{font-family:'Fraunces', serif; font-weight:600; letter-spacing:-0.01em;}
+  .mono{font-family:'IBM Plex Mono', monospace;}
+  a{color:inherit; text-decoration:none;}
+  .wrap{max-width:1100px; margin:0 auto; padding:0 32px;}
+
+  /* NAV */
+  nav{
+    position:fixed; top:0; left:0; right:0; z-index:50;
+    display:flex; align-items:center; justify-content:space-between;
+    padding:22px 32px;
+    background:linear-gradient(to bottom, rgba(27,23,18,0.9), transparent);
+  }
+  .brand{font-family:'Fraunces', serif; font-weight:700; font-size:1.15rem; letter-spacing:0.02em;}
+  .brand span{color:var(--turmeric);}
+  .nav-links{display:flex; gap:32px; font-size:0.85rem; letter-spacing:0.04em; text-transform:uppercase;}
+  .nav-links a{opacity:0.75; transition:opacity 0.2s;}
+  .nav-links a:hover{opacity:1;}
+  .order-btn{
+    background:var(--turmeric); color:var(--charcoal); font-weight:600;
+    padding:10px 20px; border-radius:2px; font-size:0.82rem;
+    letter-spacing:0.03em; text-transform:uppercase; border:none; cursor:pointer;
+    transition:transform 0.15s, background 0.15s;
+  }
+  .order-btn:hover{transform:translateY(-1px); background:#f2b45c;}
+
+  /* HERO */
+  .hero{
+    min-height:100vh; display:flex; flex-direction:column; justify-content:center;
+    position:relative; padding:120px 32px 80px;
+    background:
+      radial-gradient(circle at 85% 15%, rgba(232,163,61,0.14), transparent 45%),
+      radial-gradient(circle at 10% 90%, rgba(193,68,46,0.12), transparent 40%);
+    overflow:hidden;
+  }
+  .eyebrow{
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--turmeric); margin-bottom:20px;
+    display:flex; align-items:center; gap:10px;
+  }
+  .eyebrow::before{content:''; width:24px; height:1px; background:var(--turmeric);}
+  .hero h1{
+    font-size:clamp(3rem, 8vw, 6.2rem); line-height:0.98; max-width:900px;
+    letter-spacing:-0.02em;
+  }
+  .hero h1 em{font-style:italic; color:var(--turmeric); font-weight:500;}
+  .hero-sub{
+    max-width:480px; margin-top:28px; font-size:1.05rem; opacity:0.78; font-weight:300;
+  }
+  .hero-cta{display:flex; gap:16px; margin-top:40px; flex-wrap:wrap;}
+  .btn-primary{
+    background:var(--chili); color:var(--ivory); font-weight:600; padding:15px 30px;
+    border-radius:2px; font-size:0.9rem; letter-spacing:0.03em; border:none; cursor:pointer;
+    transition:transform 0.15s, background 0.15s;
+  }
+  .btn-primary:hover{transform:translateY(-2px); background:#d95339;}
+  .btn-ghost{
+    border:1px solid var(--ash-line); color:var(--ivory); padding:15px 30px;
+    border-radius:2px; font-size:0.9rem; letter-spacing:0.03em; transition:border-color 0.15s, background 0.15s;
+  }
+  .btn-ghost:hover{border-color:var(--turmeric); background:rgba(232,163,61,0.06);}
+
+  /* TICKET STRIP */
+  .ticket-strip{
+    display:flex; gap:0; border-top:1px solid var(--ash-line); border-bottom:1px solid var(--ash-line);
+    margin-top:70px; font-family:'IBM Plex Mono', monospace; font-size:0.78rem;
+    letter-spacing:0.05em; opacity:0.7; overflow-x:auto;
+  }
+  .ticket-strip div{padding:14px 28px; border-right:1px solid var(--ash-line); white-space:nowrap;}
+
+  /* SECTION LABEL */
+  .section{padding:110px 0;}
+  .section-label{
+    font-family:'IBM Plex Mono', monospace; font-size:0.78rem; letter-spacing:0.12em;
+    text-transform:uppercase; color:var(--turmeric); margin-bottom:14px;
+  }
+  .section h2{font-size:clamp(2rem, 4vw, 2.8rem); max-width:600px; margin-bottom:16px;}
+  .section-intro{max-width:520px; opacity:0.72; font-weight:300; margin-bottom:60px;}
+
+  /* MENU — receipt style */
+  .menu-ticket{
+    background:var(--ash); border:1px solid var(--ash-line); border-radius:3px;
+    padding:44px 40px; position:relative;
+  }
+  .menu-ticket::before, .menu-ticket::after{
+    content:''; position:absolute; left:0; right:0; height:14px;
+    background-image: radial-gradient(circle at 8px 7px, var(--charcoal) 7px, transparent 7px);
+    background-size: 24px 14px; background-repeat:repeat-x;
+  }
+  .menu-ticket::before{top:-7px;}
+  .menu-ticket::after{bottom:-7px; transform:rotate(180deg);}
+  .menu-head{
+    display:flex; justify-content:space-between; align-items:baseline;
+    border-bottom:1px dashed var(--ash-line); padding-bottom:18px; margin-bottom:8px;
+  }
+  .menu-cat{font-size:0.78rem; letter-spacing:0.1em; text-transform:uppercase; color:var(--turmeric); margin:34px 0 14px;}
+  .menu-cat:first-of-type{margin-top:8px;}
+  .menu-row{
+    display:flex; justify-content:space-between; align-items:baseline; gap:16px;
+    padding:13px 0; border-bottom:1px solid var(--ash-line);
+  }
+  .menu-row:last-child{border-bottom:none;}
+  .menu-name{font-weight:500; font-size:1.02rem;}
+  .menu-desc{display:block; font-size:0.85rem; opacity:0.6; font-weight:300; margin-top:3px;}
+  .menu-price{font-family:'IBM Plex Mono', monospace; color:var(--turmeric); white-space:nowrap; font-size:0.95rem;}
+  .heat{color:var(--chili); font-size:0.8rem; margin-left:6px;}
+
+  /* ORDER/RESERVE */
+  .order-section{
+    background:var(--ivory); color:var(--charcoal); border-radius:4px; padding:60px 50px;
+    display:grid; grid-template-columns:1fr 1fr; gap:60px; align-items:center;
+  }
+  .order-section h2{color:var(--charcoal);}
+  .order-section .section-intro{color:var(--charcoal); opacity:0.65;}
+  .order-steps{list-style:none; margin-top:28px;}
+  .order-steps li{
+    display:flex; gap:16px; padding:14px 0; border-bottom:1px solid rgba(27,23,18,0.1);
+    font-size:0.95rem;
+  }
+  .order-steps li span{
+    font-family:'IBM Plex Mono', monospace; color:var(--chili); font-weight:500; font-size:0.85rem;
+  }
+  .order-visual{
+    background:var(--charcoal); border-radius:4px; padding:40px; color:var(--ivory);
+    text-align:center;
+  }
+  .order-visual .eyebrow{justify-content:center; margin-bottom:14px;}
+  .order-visual .eyebrow::before{display:none;}
+  .order-visual h3{font-size:1.5rem; margin-bottom:10px;}
+  .order-visual p{opacity:0.65; font-size:0.9rem; margin-bottom:26px; font-weight:300;}
+
+  /* HOURS / LOCATION */
+  .info-grid{display:grid; grid-template-columns:1fr 1fr; gap:60px;}
+  .info-block h3{font-size:1.3rem; margin-bottom:18px;}
+  .hours-row{display:flex; justify-content:space-between; padding:10px 0; border-bottom:1px solid var(--ash-line); font-size:0.92rem;}
+  .hours-row span:last-child{font-family:'IBM Plex Mono', monospace; opacity:0.75;}
+
+  footer{
+    border-top:1px solid var(--ash-line); padding:40px 32px; text-align:center;
+    font-size:0.8rem; opacity:0.5; font-family:'IBM Plex Mono', monospace; letter-spacing:0.03em;
+  }
+
+  @media(max-width:820px){
+    .nav-links{display:none;}
+    .order-section{grid-template-columns:1fr;}
+    .info-grid{grid-template-columns:1fr;}
+  }
+
+  @media (prefers-reduced-motion: reduce){
+    *{transition:none !important; scroll-behavior:auto !important;}
+  }
+
+  /* Hide n8n's "Powered by" branding footer */
+  .chat-powered-by{
+    display:none !important;
+  }
+
+  /* n8n chat widget theme override */
+  :root{
+    --chat--color-primary: #E8A33D;
+    --chat--color-secondary: #C1442E;
+    --chat--window--width: 380px;
+    --chat--window--height: 600px;
+    --chat--border-radius: 4px;
+    --chat--message--font-size: 0.9rem;
+  }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="brand">JZ <span>TASTE</span></div>
+  <div class="nav-links">
+    <a href="#menu">Menu</a>
+    <a href="#order">Order</a>
+    <a href="#hours">Hours</a>
+  </div>
+  <button class="order-btn" id="navOrderBtn">Order Now</button>
+</nav>
+
+<section class="hero">
+  <div class="wrap">
+    <div class="eyebrow">Fresh, fast &middot; est. 2026</div>
+    <h1>Food that<br><em>tastes</em> like home.</h1>
+    <p class="hero-sub">Juicy burgers, fresh-baked pizza, and crispy fries made to order. JZ Taste brings fast food done right to your table — or your doorstep.</p>
+    <div class="hero-cta">
+      <button class="btn-primary" id="heroOrderBtn">Place an Order</button>
+      <a href="#menu"><button class="btn-ghost">View Menu</button></a>
+    </div>
+  </div>
+  <div class="wrap ticket-strip">
+    <div>OPEN DAILY 12PM–1AM</div>
+    <div>DINE-IN · TAKEAWAY · DELIVERY</div>
+    <div>TABLE BOOKING VIA CHAT</div>
+    <div>NEAR UET TAXILA</div>
+  </div>
+</section>
+
+<section class="section" id="menu">
+  <div class="wrap">
+    <div class="section-label">The Menu</div>
+    <h2>Cooked to order, every single time.</h2>
+    <p class="section-intro">A short menu, kept short on purpose — everything on it is made fresh once you order, not held under a lamp.</p>
+
+    <div class="menu-ticket">
+      <div class="menu-head">
+        <div class="mono" style="font-size:0.8rem; opacity:0.6;">JZ TASTE — TODAY'S SELECTS</div>
+        <div class="mono" style="font-size:0.8rem; opacity:0.6;">PKR</div>
+      </div>
+
+      <div class="menu-cat">Burgers</div>
+      <div class="menu-row">
+        <div><span class="menu-name">Zinger Burger</span><span class="menu-desc">Crispy fried chicken fillet, house sauce</span></div>
+        <div class="menu-price">650</div>
+      </div>
+      <div class="menu-row">
+        <div><span class="menu-name">Chicken Burger</span><span class="menu-desc">Grilled chicken burger</span></div>
+        <div class="menu-price">550</div>
+      </div>
+      <div class="menu-row">
+        <div><span class="menu-name">Beef Burger</span><span class="menu-desc">Beef patty burger</span></div>
+        <div class="menu-price" style="opacity:0.4;">Sold Out</div>
+      </div>
+      <div class="menu-row">
+        <div><span class="menu-name">Signature Fast Food Burger</span><span class="menu-desc">Beef patty, lettuce, tomato, cheese, our signature sauce</span></div>
+        <div class="menu-price">250</div>
+      </div>
+
+      <div class="menu-cat">Pizza</div>
+      <div class="menu-row">
+        <div><span class="menu-name">Chicken Pizza (Small)</span><span class="menu-desc">Freshly baked</span></div>
+        <div class="menu-price">1,200</div>
+      </div>
+      <div class="menu-row">
+        <div><span class="menu-name">Chicken Pizza (Large)</span><span class="menu-desc">Family size</span></div>
+        <div class="menu-price">2,200</div>
+      </div>
+
+      <div class="menu-cat">Sides</div>
+      <div class="menu-row">
+        <div><span class="menu-name">French Fries</span><span class="menu-desc">Crispy fries</span></div>
+        <div class="menu-price">350</div>
+      </div>
+
+      <div class="menu-cat">Drinks &amp; Beverages</div>
+      <div class="menu-row">
+        <div><span class="menu-name">Pepsi (500ml)</span></div>
+        <div class="menu-price">120</div>
+      </div>
+      <div class="menu-row">
+        <div><span class="menu-name">Mineral Water</span><span class="menu-desc">500ml bottle</span></div>
+        <div class="menu-price">80</div>
+      </div>
+      <div class="menu-row">
+        <div><span class="menu-name">Cold Drink</span><span class="menu-desc">Soft drink</span></div>
+        <div class="menu-price">100</div>
+      </div>
+
+      <div class="menu-cat">Dessert</div>
+      <div class="menu-row">
+        <div><span class="menu-name">Chocolate Cake Slice</span><span class="menu-desc">Fresh cake</span></div>
+        <div class="menu-price" style="opacity:0.4;">Sold Out</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="order">
+  <div class="wrap">
+    <div class="order-section">
+      <div>
+        <div class="section-label" style="opacity:0.8;">Order or Reserve</div>
+        <h2>Talk to us, we'll take it from there.</h2>
+        <p class="section-intro">No forms to fill. Open the chat, tell us what you're craving or when you're coming in — we'll confirm everything by email.</p>
+        <ul class="order-steps">
+          <li><span>01</span> Tap "Start Chat" and tell us: order or table booking</li>
+          <li><span>02</span> Share your name, phone, and email</li>
+          <li><span>03</span> Get an instant confirmation in your inbox</li>
+        </ul>
+      </div>
+      <div class="order-visual">
+        <div class="eyebrow">Live Assistant</div>
+        <h3>Ready when you are</h3>
+        <p>Orders, reservations, and menu questions — one chat handles it all.</p>
+        <button class="btn-primary" id="visualOrderBtn" style="width:100%;">Start Chat</button>
+      </div>
+    </div>
+  </div>
+</section>
+
+<section class="section" id="hours">
+  <div class="wrap info-grid">
+    <div class="info-block">
+      <h3>Hours</h3>
+      <div class="hours-row"><span>Mon – Thu</span><span>12:00 PM – 12:00 AM</span></div>
+      <div class="hours-row"><span>Fri</span><span>2:00 PM – 1:00 AM</span></div>
+      <div class="hours-row"><span>Sat – Sun</span><span>12:00 PM – 1:00 AM</span></div>
+    </div>
+    <div class="info-block">
+      <h3>Find Us</h3>
+      <div class="hours-row"><span>Address</span><span>Near UET Taxila</span></div>
+      <div class="hours-row"><span>Phone</span><span>0313 9301539</span></div>
+      <div class="hours-row"><span>Delivery</span><span>Within 5km</span></div>
+    </div>
+  </div>
+</section>
+
+<footer>
+  JZ TASTE RESTAURANT — TAXILA © 2026
+</footer>
+
+<script type="module">
+  import { createChat } from 'https://cdn.jsdelivr.net/npm/@n8n/chat/dist/chat.bundle.es.js';
+
+  createChat({
+    webhookUrl: 'https://junaidofficial.app.n8n.cloud/webhook/25b715f8-47f5-4e9b-b87b-5a273838c2df/chat',
+    mode: 'window',
+    showWelcomeScreen: true,
+    initialMessages: [
+      'Welcome to JZ Taste 👋',
+      'I can take your order or book you a table. What would you like to do?'
+    ],
+    i18n: {
+      en: {
+        title: 'JZ Taste',
+        subtitle: 'Order & Reservations',
+        footer: '',
+        getStarted: 'New Conversation',
+        inputPlaceholder: 'Type your message...',
+      }
+    }
+  });
+
+  // Wire custom buttons to open the chat widget.
+  // .chat-window-toggle is the confirmed class n8n's chat package uses for
+  // its floating button. The widget mounts a moment after createChat() runs,
+  // so we watch the DOM until it actually appears.
+  let chatToggleEl = null;
+
+  function findToggle(){
+    return document.querySelector('.chat-window-toggle');
+  }
+
+  const observer = new MutationObserver(() => {
+    const found = findToggle();
+    if(found) chatToggleEl = found;
+  });
+  observer.observe(document.body, { childList: true, subtree: true });
+
+  function openChat(){
+    const toggle = chatToggleEl || findToggle();
+    if(toggle){
+      chatToggleEl = toggle;
+      toggle.click();
+    } else {
+      setTimeout(openChat, 300);
+    }
+  }
+
+  document.getElementById('navOrderBtn').addEventListener('click', openChat);
+  document.getElementById('heroOrderBtn').addEventListener('click', openChat);
+  document.getElementById('visualOrderBtn').addEventListener('click', openChat);
+</script>
+
+</body>
+</html>
